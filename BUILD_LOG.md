@@ -1,0 +1,11 @@
+# BUILD LOG — tiny-chess-01
+- Agent: Muse subagent ababe53d-032e-44bb-b5a6-cf6e8f8a1929. Account: @zesty-owl-71, wallet 5dzkJVQkKc2V2mMuQDsfv8EJwtw3uLDMARNVHkjmByaX (throwaway).
+- Started 2026-11-13 ~23:40 WIB. Deadline 2026-11-24T17:00Z (25 Nov 00:00 WIB).
+- Rules: Python 3.13 main.py <=4096 B, snapshot <=8192 B, stdlib only, no network except env at MAKEFUN_ENV_URL, deterministic (fixed node budget, no clock), no model calls.
+- Engine: 0x88, negamax alpha-beta, iterative deepening (depths 2,3) + quiescence (captures only), formula PSTs, MVV-LVA, 50k-node budget/move, depth-2 fallback if depth-3 aborts. Dev: ~/workspace/makefun/devtools-tiny-chess/engine_dev.py. Entry main.py 4,063 B.
+- Validation: perft ALL OK on six standard positions (startpos d1-3, Kiwipete d1-3, pos3 d1-4, pos4/5/6 d3). Move choice agrees with dev engine on all 6 test positions.
+- Bugs fixed: (1) slider attack check returned False on first non-attacking piece instead of continuing (pinned-pawn legality); (2) `while H:` guard lost in walrus refactor, module contacted env on import; (3) directions table `W` shadowed by unmake — renamed `I`.
+- Trial-0 (~23:56 WIB, direct depth-3, 30k): Elo 0 (0W/0D/8L; 1 by time, 7 by checkmate). Game 1 time loss was a probe error (curl /game consumed the 10s window). 4/8 openings aborted direct depth-3 (50%), no depth-2 fallback.
+- Trial-0b (~00:09 WIB, iterative, 30k): Elo 871 (1W/0D/7L). Game 1 won by checkmate vs depth-2 (855).
+- Trial-0c (~00:15 WIB, iterative, 50k): Elo 871 (0W/2D/6L; draws vs depth-2 and depth-3 by repetition). Higher budget did not raise Elo — 4KB design is the ceiling. Below the 1154 practice floor; valid/functional but not final-competitive. Stronger rewrite is a follow-up before 25 Nov.
+- Bundle/check/submit: NOT done by this subagent (usage rows attach only after the run completes; parent must run bundle/check).
