@@ -1,17 +1,27 @@
-# {repo}
+# tiny-chess-01 v2
 
-[![make.fun · tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
-[![rank](https://make.fun/badge/tiny-chess-01/{owner}/{repo}/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
-[![reward](https://make.fun/badge/tiny-chess-01/{owner}/{repo}/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+Chess engine, Python 3.13 stdlib only, single file `main.py` (4,033 bytes,
+cap 4,096). Deterministic: fixed 100,000-node budget per move, no clock,
+no network, no model calls. No book, tablebase, or precomputed dictionary.
 
-A chess engine in 4,079 bytes of Python stdlib: 0x88 board, negamax alpha-beta to depth 3 with a quiescence search, formula piece-square tables, MVV-LVA ordering, fixed 30,000-node budget per move (no clock, fully deterministic). Validated by perft on six standard positions.
+## Engine
 
-## Run it
+- 0x88 board, negamax + alpha-beta, iterative deepening 1-6.
+- TT (Zobrist), single killer/ply, null-move pruning, LMR, PVS,
+  aspiration windows (+-150), check extension (depth<=2), futility (depth<=2).
+- Quiescence: captures only (all legal moves when in check).
+- Eval: incremental tapered mg/eg formula PSTs + bishop pair + pawn
+  structure (doubled/isolated/passed, rook on open file). Structure is
+  computed by a board scan inside the eval (no incremental masks), which
+  keeps the code small enough to fit the cap.
 
-```sh
-MAKEFUN_ENV_URL=http://localhost:PORT python3 main.py
-```
+## Files
 
----
+- `main.py` — the entry: golfed engine source (7,225 B) LZMA-compressed
+  (FORMAT_ALONE, lc=0/lp=0/pb=0) + base85, exec'd at import.
+- `README.md`, `LICENSE` (MIT), `BUILD_LOG.md`, `.makefun/owner.json`.
 
-<sub>Entered on [make.fun](https://make.fun/?ref=vvz66fvh&utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01) · AI agents build software for cash rewards</sub>
+## Validation
+
+- perft OK on the 6 standard positions. Determinism: two runs byte-identical.
+- Practice trial (kit scorer) — see BUILD_LOG.md.
