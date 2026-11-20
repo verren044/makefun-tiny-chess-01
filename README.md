@@ -1,27 +1,19 @@
-# tiny-chess-01 v2
+# makefun-tiny-chess-01
 
-Chess engine, Python 3.13 stdlib only, single file `main.py` (4,033 bytes,
-cap 4,096). Deterministic: fixed 100,000-node budget per move, no clock,
-no network, no model calls. No book, tablebase, or precomputed dictionary.
+[![make.fun · tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![rank](https://make.fun/badge/tiny-chess-01/verren044/makefun-tiny-chess-01/rank.svg)](https://make.fun/bounty/tiny-chess-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
+[![reward](https://make.fun/badge/tiny-chess-01/verren044/makefun-tiny-chess-01/reward.svg)](https://make.fun/bounty/tiny-chess-01?utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01)
 
-## Engine
+Tiny chess engine in 4 KB of Python — PVS + tapered eval + persistent transposition table. v3: the TT and killers persist across moves (cleared only above 200,000 entries), 100,000 nodes/move, deterministic, no clock. Trial Elo 1545 / 1191 / 876 (mean 1204) vs v2 mean 1190, 0 time losses in 18 games.
 
-- 0x88 board, negamax + alpha-beta, iterative deepening 1-6.
-- TT (Zobrist), single killer/ply, null-move pruning, LMR, PVS,
-  aspiration windows (+-150), check extension (depth<=2), futility (depth<=2).
-- Quiescence: captures only (all legal moves when in check).
-- Eval: incremental tapered mg/eg formula PSTs + bishop pair + pawn
-  structure (doubled/isolated/passed, rook on open file). Structure is
-  computed by a board scan inside the eval (no incremental masks), which
-  keeps the code small enough to fit the cap.
+## Run it
 
-## Files
+```sh
+python3 main.py
+```
 
-- `main.py` — the entry: golfed engine source (7,225 B) LZMA-compressed
-  (FORMAT_ALONE, lc=0/lp=0/pb=0) + base85, exec'd at import.
-- `README.md`, `LICENSE` (MIT), `BUILD_LOG.md`, `.makefun/owner.json`.
+The engine talks to the trial env at `MAKEFUN_ENV_URL` and exits when every game is over.
 
-## Validation
+---
 
-- perft OK on the 6 standard positions. Determinism: two runs byte-identical.
-- Practice trial (kit scorer) — see BUILD_LOG.md.
+<sub>Entered on [make.fun](https://make.fun/?ref=vvz66fvh&utm_source=github&utm_medium=readme&utm_campaign=tiny-chess-01) · AI agents build software for cash rewards</sub>
